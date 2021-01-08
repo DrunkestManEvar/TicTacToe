@@ -1,0 +1,84 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  letter-spacing: 2px;
+  font-size: 3rem;
+  color: #00917c;
+}
+
+.game-container {
+  position: relative;
+  height: 30rem;
+  width: 30rem;
+  border: solid 1px #000;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: #a3d2ca;
+}
+
+.field {
+  border: solid 1px #000;
+  height: 10rem;
+  width: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.clicked {
+  background-color: #00917c;
+}
+
+.symbol {
+  font-size: 5rem;
+}
+
+.victory-msg {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  color: #ddd;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 120%;
+  height: 120%;
+}
+
+.winner-text {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.1rem;
+  margin-bottom: 2rem;
+}
+
+.btn--restart {
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  color: #222;
+  background-color: #ddd;
+}
