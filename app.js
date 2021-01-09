@@ -22,7 +22,7 @@ class TicTacToe {
           e.target.classList.contains('clicked') ||
           !this.playerTurn
         )
-          console.log('hey');
+          return;
 
         const pickedPlayerFieldNum = +e.target.id.slice(-1);
         this.placeSymbol(pickedPlayerFieldNum);
@@ -31,17 +31,20 @@ class TicTacToe {
   }
 
   detectRestart() {
-    this.container.addEventListener('click', function (e) {
-      if (!e.target.classList.contains('btn--restart')) return;
+    document.body.addEventListener(
+      'click',
+      function (e) {
+        if (!e.target.classList.contains('btn--restart')) return;
 
-      this.restartGame();
-    });
+        this.restartGame();
+      }.bind(this)
+    );
   }
 
   PCTurn() {
     const randomNum = this.pickRandomNum();
 
-    if (this.occupiedFields.length >= 8) console.log('draw');
+    if (this.occupiedFields.length >= 8) this.createEndgameModal('draw');
     else if (this.occupiedFields.includes(randomNum)) return this.PCTurn();
     else {
       setTimeout(() => this.placeSymbol(randomNum), 0);
@@ -53,14 +56,9 @@ class TicTacToe {
       ? this.checkFields(this.playerFields)
       : this.checkFields(this.PCFields);
     if (!isWinner) return;
+    this.declaredWinner = true;
 
-    const victoryMsg = document.createElement('div');
-    victoryMsg.classList.add('victory-msg');
-    victoryMsg.innerHTML = `
-    <p class="winner-text">${playerTurn ? 'Player' : 'Computer'} wins!</p>
-    <button class="btn--restart">Restart</button>
-    `;
-    this.container.append(victoryMsg);
+    this.createEndgameModal(playerTurn);
   }
 
   checkFields(fieldsArr) {
@@ -104,6 +102,7 @@ class TicTacToe {
       : this.PCFields.push(fieldNum);
 
     this.checkIfWinner(this.playerTurn);
+    if (this.declaredWinner) return;
 
     this.playerTurn = !this.playerTurn;
     if (!this.playerTurn) this.PCTurn();
@@ -114,8 +113,10 @@ class TicTacToe {
     this.playerFields = [];
     this.PCFields = [];
     this.playerTurn = true;
-    document.querySelector('.victory-msg').remove();
+    this.declaredWinner = false;
+    document.querySelector('.endgame-msg').remove();
     this.fields.forEach(field => {
+      if (!field.classList.contains('clicked')) return;
       field.removeChild(field.firstChild);
       field.classList.remove('clicked');
     });
@@ -126,6 +127,21 @@ class TicTacToe {
     symbol.classList.add('symbol');
     this.playerTurn ? (symbol.textContent = 'X') : (symbol.textContent = 'O');
     return symbol;
+  }
+
+  createEndgameModal(playerTurn) {
+    let endgameText;
+    if (playerTurn === 'draw') endgameText = 'Draw!';
+    else if (playerTurn) endgameText = 'Player wins!';
+    else if (!playerTurn) endgameText = 'PC wins!';
+
+    const endgameModal = document.createElement('div');
+    endgameModal.classList.add('endgame-msg');
+    endgameModal.innerHTML = `
+    <p class="endgame-text">${endgameText}</p>
+    <button class="btn--restart">Restart</button>
+    `;
+    document.body.append(endgameModal);
   }
 
   pickRandomNum() {
